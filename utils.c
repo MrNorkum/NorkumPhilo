@@ -40,13 +40,16 @@ int	check_eat(t_program *x)
 				x->others.ctrl_eat_limit++;
 			pthread_mutex_unlock(&x->mutex.ctrl_2_m);
 		}
-		if (x->others.ctrl_eat_limit == x->args.num_of_philo)
+		pthread_mutex_lock(&x->mutex.ctrl_2_m);
+		if (x->others.ctrl_eat_limit >= x->args.num_of_philo)
 		{
+			pthread_mutex_unlock(&x->mutex.ctrl_2_m);
 			pthread_mutex_lock(&x->die.die_m);
 			x->others.finished = 1;
 			pthread_mutex_unlock(&x->die.die_m);
 			return (1);
 		}
+		pthread_mutex_unlock(&x->mutex.ctrl_2_m);
 	}
 	return (0);
 }
